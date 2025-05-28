@@ -1,0 +1,72 @@
+<!DOCTYPE html> <!-- Define que este é um documento HTML5 -->
+<html lang="pt-br"> <!-- Define o idioma da página como português do Brasil -->
+<head>
+  <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+  <title>Calculadora Simples</title> <!-- Título da aba do navegador -->
+</head>
+<body>
+
+  <!-- Formulário com campo de nome (apenas decorativo neste exemplo) -->
+  <form>
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
+  </form>
+
+  <hr> <!-- Linha horizontal para separar seções -->
+
+  <!-- Campos de entrada para os dois números -->
+  <input type="number" id="numero1" placeholder="Número 1">
+  <input type="number" id="numero2" placeholder="Número 2"><br><br>
+
+  <!-- Botões para cada operação matemática -->
+  <button onclick="somar()">Somar</button>
+  <button onclick="subtrair()">Subtrair</button>
+  <button onclick="multiplicar()">Multiplicar</button>
+  <button onclick="dividir()">Dividir</button>
+
+  <!-- Área onde será exibido o resultado -->
+  <p id="resultado"></p>
+
+  <!-- Código JavaScript que realiza os cálculos -->
+  <script>
+    // Função que realiza a soma
+    function somar() {
+      const n1 = parseFloat(document.getElementById("numero1").value); // Lê o primeiro número
+      const n2 = parseFloat(document.getElementById("numero2").value); // Lê o segundo número
+      const resultado = n1 + n2; // Soma os dois valores
+      document.getElementById("resultado").innerText = "Resultado: " + resultado; // Mostra o resultado
+    }
+
+    // Função que realiza a subtração
+    function subtrair() {
+      const n1 = parseFloat(document.getElementById("numero1").value);
+      const n2 = parseFloat(document.getElementById("numero2").value);
+      const resultado = n1 - n2;
+      document.getElementById("resultado").innerText = "Resultado: " + resultado;
+    }
+
+    // Função que realiza a multiplicação
+    function multiplicar() {
+      const n1 = parseFloat(document.getElementById("numero1").value);
+      const n2 = parseFloat(document.getElementById("numero2").value);
+      const resultado = n1 * n2;
+      document.getElementById("resultado").innerText = "Resultado: " + resultado;
+    }
+
+    // Função que realiza a divisão com tratamento de erro para divisão por zero
+    function dividir() {
+      const n1 = parseFloat(document.getElementById("numero1").value);
+      const n2 = parseFloat(document.getElementById("numero2").value);
+      if (n2 === 0) {
+        // Evita divisão por zero, que gera erro
+        document.getElementById("resultado").innerText = "Erro: Divisão por zero.";
+      } else {
+        const resultado = n1 / n2;
+        document.getElementById("resultado").innerText = "Resultado: " + resultado;
+      }
+    }
+  </script>
+
+</body>
+</html>
+
