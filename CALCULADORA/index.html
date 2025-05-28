@@ -1,0 +1,72 @@
+<html>
+<html lang="pt-br"> <!-- Define o idioma -->
+  <head>
+     <meta charset="UTF-8">
+     <title> Calculadora </title>
+     <!--Estilo CSS do layout interno e aparência dos elementos-->
+     <style>
+        body{
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }/* estilo dos campos de exibição*/
+        input[type="text"]{
+            width: 160px;
+            height: 30px;
+            font-size: 20px;
+            text-align: right;
+
+        }/* Estilo do botão dos números e operadores*/
+        button{
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+            margin: 2px;
+        }/*Estilo do botão de igual*/
+
+      button#igual{
+        width: 160px;
+        height: 40px;
+      }
+     </style>
+  </head>
+<body>
+<h1> Calculadora</h1>
+<input type=" text" id="display" readonly>
+    <br><br>
+    <div>
+        <!-- Linha 1 números e soma-->
+     <button onclick="addChar('1')">1</button>
+     <button onclick="addChar('2')">2</button>
+     <button onclick="addChar('3')">3</button>
+     <button onclick="addChar('+')">+</button>
+     <br>
+
+     <!-- Linha 2 números e menos-->
+     <button onclick="addChar('4')">4</button>
+     <button onclick="addChar('5')">5</button>
+     <button onclick="addChar('6')">6</button>
+     <button onclick="addChar('-')">-</button>
+     <br>
+
+     <!-- Linha 3 números e multiplicação-->
+     <button onclick="addChar('7')">7</button>
+     <button onclick="addChar('8')">8</button>
+     <button onclick="addChar('9')">9</button>
+     <button onclick="addChar('*')">*</button>
+     <br>
+
+    <!-- Linha 4 números e divisão-->
+     <button onclick="addChar('0')">0</button>
+     <button onclick="addChar('.')">.</button>
+     <button onclick="clearDisplay()">C</button>
+     <button onclick="addChar('/')">/</button>
+     <br><br>
+
+     <button id="igual" onclick="calculate()">=</button>
+    </div>
+    <script src ="script.js"></script>
+</div>
+
+</body>
+
+</html>
