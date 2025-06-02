@@ -1,19 +1,25 @@
-<html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <title>Preencha seu Currículo</title>
 
+  <!-- Estilo da página -->
   <style>
+    /* Define estilo geral da página */
     body {
       font-family: Arial, sans-serif;
       background-color: #b2d0ee;
       padding: 30px;
     }
+
+    /* Título principal */
     h1 {
       text-align: center;
       color: #003468;
     }
+
+    /* Estilo do formulário */
     form {
       background-color: #ffffff;
       padding: 20px;
@@ -21,11 +27,15 @@
       max-width: 600px;
       margin: 0 auto;
     }
+
+    /* Estilo dos rótulos (labels) */
     label {
       display: block;
       margin-top: 10px;
       font-weight: bold;
     }
+
+    /* Estilo dos campos de entrada e áreas de texto */
     input, textarea {
       width: 100%;
       padding: 8px;
@@ -33,6 +43,8 @@
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+
+    /* Estilo dos botões */
     button {
       margin-top: 15px;
       background-color: #007bff;
@@ -44,6 +56,8 @@
       cursor: pointer;
       margin-right: 5px;
     }
+
+    /* Container que exibirá o currículo gerado */
     #curriculo {
       background-color: white;
       padding: 20px;
@@ -51,24 +65,41 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 30px auto;
     }
+
+    /* Cada seção do currículo */
     .secao {
       margin-bottom: 15px;
     }
+
+    /* Títulos das seções */
     .secao h2 {
       color: #003366;
       border-bottom: 1px solid #ccc;
     }
+
+    /* Pré-visualização da imagem de perfil */
+    #foto-preview {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
   </style>
+
+  <!-- Importação da biblioteca jsPDF para gerar PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
+  <!-- Título da página -->
   <h1>Preencha seu Currículo</h1>
 
+  <!-- Início do formulário -->
   <form id="formulario">
+    <!-- Campos de entrada -->
     <label>Nome completo</label>
     <input type="text" id="nome" required>
 
@@ -76,35 +107,61 @@
     <input type="email" id="email" required>
 
     <label>Telefone</label>
-    <input type="tel" id="telefone">
+    <input type="tel" id="telefone" required>
 
     <label>Cidade/Estado</label>
-    <input type="text" id="cidade">
+    <input type="text" id="cidade" required>
 
     <label>Objetivo profissional</label>
-    <textarea id="objetivo"></textarea>
+    <textarea id="objetivo" required></textarea>
 
     <label>Formação acadêmica</label>
-    <textarea id="formacao"></textarea>
+    <textarea id="formacao" required></textarea>
 
     <label>Experiência profissional</label>
-    <textarea id="experiencia"></textarea>
+    <textarea id="experiencia" required></textarea>
 
     <label>Cursos complementares</label>
-    <textarea id="cursos"></textarea>
+    <textarea id="cursos" required></textarea>
 
     <label>Idiomas</label>
-    <textarea id="idiomas"></textarea>
+    <textarea id="idiomas" required></textarea>
 
+    <!-- Upload da imagem -->
+    <label>Foto (opcional)</label>
+    <input type="file" id="foto" accept="image/*">
+    <img id="foto-preview" alt="Pré-visualização da foto" />
+
+    <!-- Botões para ações -->
     <button type="button" onclick="gerarCurriculo()">Gerar Currículo</button>
     <button type="button" onclick="novoCurriculo()">Novo Currículo</button>
     <button type="button" onclick="gerarPDF()">Gerar PDF</button>
   </form>
 
+  <!-- Área onde o currículo gerado será exibido -->
   <div id="curriculo"></div>
 
+  <!-- Início do script JavaScript -->
   <script>
+    // Variável global para armazenar a imagem em formato base64
+    let fotoBase64 = "";
+
+    // Quando o usuário escolhe uma imagem, ela será convertida para base64 e exibida
+    document.getElementById("foto").addEventListener("change", function () {
+      const file = this.files[0]; // Pega o arquivo selecionado
+      if (file) {
+        const reader = new FileReader(); // Cria um leitor de arquivos
+        reader.onload = function (e) {
+          fotoBase64 = e.target.result; // Armazena o conteúdo base64
+          document.getElementById("foto-preview").src = fotoBase64; // Mostra a imagem na tela
+        };
+        reader.readAsDataURL(file); // Lê o arquivo como base64
+      }
+    });
+
+    // Função que gera o currículo na tela
     function gerarCurriculo() {
+      // Pega os valores de todos os campos
       const nome = document.getElementById("nome").value;
       const email = document.getElementById("email").value;
       const telefone = document.getElementById("telefone").value;
@@ -115,8 +172,15 @@
       const cursos = document.getElementById("cursos").value;
       const idiomas = document.getElementById("idiomas").value;
 
+      // Adiciona imagem somente se ela estiver presente
+      let imagemHTML = fotoBase64
+        ? `<img src="${fotoBase64}" style="width:150px;height:150px;border-radius:10px;margin-bottom:15px;">`
+        : "";
+
+      // Monta o HTML do currículo
       const curriculo = `
         <div class="secao">
+          ${imagemHTML}
           <h2>${nome}</h2>
           <p>${email} | ${telefone} | ${cidade}</p>
         </div>
@@ -142,19 +206,30 @@
         </div>
       `;
 
+      // Exibe o currículo gerado na tela
       document.getElementById("curriculo").innerHTML = curriculo;
     }
 
+    // Limpa todos os campos e o currículo gerado
     function novoCurriculo() {
-      document.getElementById("formulario").reset();
-      document.getElementById("curriculo").innerHTML = "";
+      document.getElementById("formulario").reset(); // Limpa formulário
+      document.getElementById("curriculo").innerHTML = ""; // Limpa currículo na tela
+      document.getElementById("foto-preview").src = ""; // Remove imagem
+      fotoBase64 = ""; // Reseta variável da imagem
     }
 
+    // Gera o PDF do currículo
     async function gerarPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
+      const { jsPDF } = window.jspdf; // Acessa o construtor jsPDF
+      const doc = new jsPDF(); // Cria novo PDF
+      let y = 10; // Posição vertical inicial
 
+      // Se houver imagem, adiciona no canto superior direito
+      if (fotoBase64) {
+        doc.addImage(fotoBase64, "JPEG", 150, 10, 40, 40);
+      }
+
+      // Função auxiliar para adicionar seções com texto formatado
       function addSecao(titulo, texto) {
         const splitText = doc.splitTextToSize(texto || "Não informado", 180);
         doc.setFontSize(14);
@@ -165,26 +240,18 @@
         y += splitText.length * 7 + 5;
       }
 
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("telefone").value;
-      const cidade = document.getElementById("cidade").value;
-      const objetivo = document.getElementById("objetivo").value;
-      const formacao = document.getElementById("formacao").value;
-      const experiencia = document.getElementById("experiencia").value;
-      const cursos = document.getElementById("cursos").value;
-      const idiomas = document.getElementById("idiomas").value;
+      // Adiciona os dados no PDF
+      addSecao("Nome:", document.getElementById("nome").value);
+      addSecao("E-mail:", document.getElementById("email").value);
+      addSecao("Telefone:", document.getElementById("telefone").value);
+      addSecao("Cidade/Estado:", document.getElementById("cidade").value);
+      addSecao("Objetivo:", document.getElementById("objetivo").value);
+      addSecao("Formação Acadêmica:", document.getElementById("formacao").value);
+      addSecao("Experiência Profissional:", document.getElementById("experiencia").value);
+      addSecao("Cursos Complementares:", document.getElementById("cursos").value);
+      addSecao("Idiomas:", document.getElementById("idiomas").value);
 
-      addSecao("Nome:", nome);
-      addSecao("E-mail:", email);
-      addSecao("Telefone:", telefone);
-      addSecao("Cidade/Estado:", cidade);
-      addSecao("Objetivo:", objetivo);
-      addSecao("Formação Acadêmica:", formacao);
-      addSecao("Experiência Profissional:", experiencia);
-      addSecao("Cursos Complementares:", cursos);
-      addSecao("Idiomas:", idiomas);
-
+      // Salva o arquivo como PDF
       doc.save("curriculo.pdf");
     }
   </script>
