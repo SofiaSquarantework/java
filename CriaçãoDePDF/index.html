@@ -1,0 +1,109 @@
+<html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário PDF</title>
+  <style>
+
+      body {
+     font-family: Verdana, sans-serif; /* Define a fonte usada */
+      background-color: #dce8f3; /* Cor de fundo da página */
+      padding: 30px; /* Espaçamento interno da página */
+      font-size: 20px;
+    }
+button {
+      margin-top: 15px; /* Espaço acima do botão */
+      background-color: #00ff00; /* Cor verde do botão */
+      color: white; /* Cor do texto do botão */
+      border: none; /* Sem borda */
+      padding: 10px 15px; /* Espaçamento interno do botão */
+      border-radius: 5px; /* Bordas arredondadas */
+      font-size: 20px; /* Tamanho da fonte */
+      cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    }
+
+ form {
+      background-color: #ffffff; /* Fundo branco para o formulário */
+      padding: 35px; /* Espaçamento interno */
+      border-radius: 10px; /* Bordas arredondadas */
+      max-width: 600px; /* Largura máxima do formulário */
+      margin: 10 auto; /* Centraliza o formulário horizontalmente */
+      font-size: 20px; /* Tamanho da fonte */
+    }
+
+ h1 {
+      text-align: center; /* Centraliza o texto */
+      color: #000000; /* Cor  escura */
+    }
+
+    #resultado {
+  background-color: #ffffff;/* Fundo branco para o formulário */
+  padding: 35px;/* Espaçamento interno */
+  border-radius: 10px;/* Bordas arredondadas */
+  max-width: 600px; /*Largura máxima do formulário */
+  margin: 30px auto; /* Centraliza horizontalmente */
+  font-size: 20px;/* Tamanho da fonte */
+
+}
+
+
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <h1>Cadastro do Aluno</h1>
+
+  <form id="formulario">
+    <label>Nome: <input type="text" id="nome" required></label><br><br>
+    <label>Idade: <input type="number" id="idade" required></label><br><br>
+    <label>Email: <input type="email" id="email" required></label><br><br>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <hr>
+
+  <div id="resultado" style="display: none;">
+    <h2>Dados Coletados:</h2>
+    <p><strong>Nome:</strong> <span id="res-nome"></span></p>
+    <p><strong>Idade:</strong> <span id="res-idade"></span></p>
+    <p><strong>Email:</strong> <span id="res-email"></span></p>
+    <button onclick="gerarPDF()">Gerar PDF</button>
+    
+  </div>
+
+  <script>
+    document.getElementById('formulario').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const idade = document.getElementById('idade').value;
+      const email = document.getElementById('email').value;
+
+      document.getElementById('res-nome').textContent = nome;
+      document.getElementById('res-idade').textContent = idade;
+      document.getElementById('res-email').textContent = email;
+
+      document.getElementById('resultado').style.display = 'block';
+    });
+
+    async function gerarPDF() {
+      const { jsPDF } = window.jspdf;
+      
+      const doc = new jsPDF();
+
+      const nome = document.getElementById('res-nome').textContent;
+      const idade = document.getElementById('res-idade').textContent;
+      const email = document.getElementById('res-email').textContent;
+
+      doc.text("Cadastro do Aluno", 10, 10);
+      doc.text(`Nome: ${nome}`, 10, 20);
+      doc.text(`Idade: ${idade}`, 10, 30);
+      doc.text(`Email: ${email}`, 10, 40);
+
+      doc.save("cadastro.pdf");
+    }
+  </script>
+
+</body>
+</html>
