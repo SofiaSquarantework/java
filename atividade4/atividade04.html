@@ -1,0 +1,120 @@
+<html> <!-- Declara o tipo de documento como HTML5 -->
+<html lang="pt-br"> <!-- Define o idioma da página como português do Brasil -->
+
+<head>
+    <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+    <title>CADASTRO ONLINE DE USUÁRIOS</title> <!-- Título da aba do navegador -->
+
+
+    <!-- Estilos da página -->
+    <style>
+
+        button {
+      background-color: green;/*Define a cor do botão*/
+      color: rgb(243, 243, 243);/*Define a cor do texto dentro do  botão*/
+      padding: 10px;
+      border: 2px solid black;/*Define a borda, a cor e o tamanho dela */
+      border-radius: 5px;
+      font-size: 16px;
+      text-align: center; /* Centraliza o texto */
+    }
+   
+    
+        body { /*Tudo que estiver aqui aparece na página */
+
+            font-family: Arial, sans-serif; /* Define a fonte usada no corpo */
+            padding: 20px; /* Adiciona espaçamento interno */
+            background-color: #ffffff; /* Define uma cor de fundo clara */
+            border: 2px solid black;/* Define a borda da página, com a cor preta*/
+            
+            
+        }
+
+        h1 {
+            color: #000000; /* Cor preta para o título principal */
+           
+          
+        }
+
+        input, button {
+            display: block; /* Faz com que os elementos fiquem em blocos (um embaixo do outro) */
+            margin-bottom: 10px; /* Espaço abaixo de cada campo/botão */
+            padding: 8px; /* Espaço interno nos campos e botão */
+            width: 300px; /* Largura fixa de 300 pixels */
+            font-size: 16px; /* Tamanho da fonte dos inputs e botão */
+            border: 2px solid black;/* Define a borda da página, com a cor preta*/
+            text-align: center; /* Centraliza o texto */
+        }
+
+        #resultado {
+            margin-top: 20px; /* Espaço acima da mensagem de resultado */
+            font-weight: bold; /* Deixa o texto em negrito */
+            color: green; /* Cor padrão do texto do resultado */
+            
+        }
+    </style><!--É usada para deixar a página bonita e bem organizada visualmente.-->
+</head><!--parte invisível da página → configurações e informações para o navegador.-->
+
+<body>
+
+    <h1>CADASTRO ONLINE DE USUÁRIOS</h1> <!-- Título principal da página -->
+
+    <!-- Campos de entrada de dados do usuário -->
+    <input type="text" id="nome" placeholder="Nome"> <!-- Campo de texto para o nome -->
+    <input type="email" id="email" placeholder="E-mail"> <!-- Campo de e-mail -->
+    <input type="number" id="idade" placeholder="Idade"> <!-- Campo numérico para idade -->
+    <input type="text" id="endereco" placeholder="Endereço"> <!-- Campo de texto para o endereço -->
+    <input type="tel" id="telefone"placeholder="Telefone"><!-- Campo númerico para o telefone-->
+
+
+
+
+    <!-- Botão que executa a função cadastrar() quando clicado -->
+    <button onclick="cadastrar()">FINALIZAR CADASTRO</button>
+    <button onclick="novousuário()">NOVO USUÁRIO</button>
+
+    <!-- Parágrafo vazio onde será exibida a mensagem final -->
+    <p id="resultado"></p>
+
+
+    <!-- Código JavaScript que faz a interação -->
+    <script>
+        function novousuário(){
+
+            document.getElementById('nome').value="";
+            document.getElementById('email').value="";
+            document.getElementById('idade').value="";
+            document.getElementById('endereco').value="";
+            document.getElementById('telefone').value="";
+            document.getElementById('resultado').innerText= ``;
+        }
+
+        function cadastrar() {
+            // Captura os valores digitados pelo usuário
+            
+            const nome = document.getElementById("nome").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const idade = document.getElementById("idade").value.trim();
+            const endereco = document.getElementById("endereco").value.trim();
+            const resultado = document.getElementById("resultado");
+             
+            // Verifica se algum dos campos está vazio
+            if (nome === "" || email === "" || idade === "" || endereco === "" || telefone ==="" ) {
+                resultado.style.color = "red"; // Muda a cor da mensagem para vermelho
+                resultado.textContent = "POR FAVOR ,PREENCHA TODOS OS CAMPOS."; // Exibe aviso
+                return; // Interrompe a função
+            }
+
+            // Se todos os campos estiverem preenchidos, exibe a mensagem de sucesso
+            resultado.style.color = "green"; // Cor verde para confirmação
+            resultado.textContent = `USUÁRIO CADASTRADO COM SUCESSO: ${nome} (${email}), ${idade} anos, residente em ${endereco}, ${telefone}.`;
+        }
+    </script>
+
+
+
+</body>
+</html>
+
+
+    
