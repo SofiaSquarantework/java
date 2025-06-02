@@ -1,0 +1,193 @@
+<html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Preencha seu Currículo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #b2d0ee;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #003468;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    #curriculo {
+      background-color: white;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .secao {
+      margin-bottom: 15px;
+    }
+    .secao h2 {
+      color: #003366;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <h1>Preencha seu Currículo</h1>
+
+  <form id="formulario">
+    <label>Nome completo</label>
+    <input type="text" id="nome" required>
+
+    <label>E-mail</label>
+    <input type="email" id="email" required>
+
+    <label>Telefone</label>
+    <input type="tel" id="telefone">
+
+    <label>Cidade/Estado</label>
+    <input type="text" id="cidade">
+
+    <label>Objetivo profissional</label>
+    <textarea id="objetivo"></textarea>
+
+    <label>Formação acadêmica</label>
+    <textarea id="formacao"></textarea>
+
+    <label>Experiência profissional</label>
+    <textarea id="experiencia"></textarea>
+
+    <label>Cursos complementares</label>
+    <textarea id="cursos"></textarea>
+
+    <label>Idiomas</label>
+    <textarea id="idiomas"></textarea>
+
+    <button type="button" onclick="gerarCurriculo()">Gerar Currículo</button>
+    <button type="button" onclick="novoCurriculo()">Novo Currículo</button>
+    <button type="button" onclick="gerarPDF()">Gerar PDF</button>
+  </form>
+
+  <div id="curriculo"></div>
+
+  <script>
+    function gerarCurriculo() {
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const cidade = document.getElementById("cidade").value;
+      const objetivo = document.getElementById("objetivo").value;
+      const formacao = document.getElementById("formacao").value;
+      const experiencia = document.getElementById("experiencia").value;
+      const cursos = document.getElementById("cursos").value;
+      const idiomas = document.getElementById("idiomas").value;
+
+      const curriculo = `
+        <div class="secao">
+          <h2>${nome}</h2>
+          <p>${email} | ${telefone} | ${cidade}</p>
+        </div>
+        <div class="secao">
+          <h2>Objetivo</h2>
+          <p>${objetivo}</p>
+        </div>
+        <div class="secao">
+          <h2>Formação Acadêmica</h2>
+          <p>${formacao}</p>
+        </div>
+        <div class="secao">
+          <h2>Experiência Profissional</h2>
+          <p>${experiencia}</p>
+        </div>
+        <div class="secao">
+          <h2>Cursos Complementares</h2>
+          <p>${cursos}</p>
+        </div>
+        <div class="secao">
+          <h2>Idiomas</h2>
+          <p>${idiomas}</p>
+        </div>
+      `;
+
+      document.getElementById("curriculo").innerHTML = curriculo;
+    }
+
+    function novoCurriculo() {
+      document.getElementById("formulario").reset();
+      document.getElementById("curriculo").innerHTML = "";
+    }
+
+    async function gerarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+
+      function addSecao(titulo, texto) {
+        const splitText = doc.splitTextToSize(texto || "Não informado", 180);
+        doc.setFontSize(14);
+        doc.text(titulo, 10, y);
+        y += 8;
+        doc.setFontSize(12);
+        doc.text(splitText, 10, y);
+        y += splitText.length * 7 + 5;
+      }
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const cidade = document.getElementById("cidade").value;
+      const objetivo = document.getElementById("objetivo").value;
+      const formacao = document.getElementById("formacao").value;
+      const experiencia = document.getElementById("experiencia").value;
+      const cursos = document.getElementById("cursos").value;
+      const idiomas = document.getElementById("idiomas").value;
+
+      addSecao("Nome:", nome);
+      addSecao("E-mail:", email);
+      addSecao("Telefone:", telefone);
+      addSecao("Cidade/Estado:", cidade);
+      addSecao("Objetivo:", objetivo);
+      addSecao("Formação Acadêmica:", formacao);
+      addSecao("Experiência Profissional:", experiencia);
+      addSecao("Cursos Complementares:", cursos);
+      addSecao("Idiomas:", idiomas);
+
+      doc.save("curriculo.pdf");
+    }
+  </script>
+
+</body>
+</html>
