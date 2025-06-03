@@ -1,0 +1,285 @@
+<html><!-- Define o tipo de documento HTML -->
+<html lang="pt-br"> <!-- Define o idioma da página como português do Brasil -->
+
+<head>
+  <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+  <title>Preencha seu Currículo</title> <!-- Título da aba do navegador -->
+
+  <style>
+    /* Estilização da página */
+    body {
+      font-family: Arial, sans-serif; /* Fonte principal */
+      background-color: #b2d0ee; /* Cor de fundo */
+      padding: 30px; /* Espaçamento interno da página */
+    }
+
+    h1 {
+      text-align: center; /* Centraliza o título */
+      color: #003468; /* Cor do texto */
+    }
+
+    form {
+      background-color: #ffffff; /* Fundo branco para o formulário */
+      padding: 20px;/* Adiciona espaçamento interno */
+      border-radius: 10px; /* Cantos arredondados */
+      max-width: 600px; /* Largura máxima */
+      margin: 0 auto; /* Centraliza o formulário na tela */
+    }
+
+    label {
+      display: block;/* Faz com que os elementos fiquem em blocos (um embaixo do outro) */
+      margin-top: 10px;/* Espaço abaixo de cada campo */
+      font-weight: bold;/* Deixa o texto em negrito */
+    }
+
+    input, textarea {
+      width: 100%; /* Ocupa toda a largura disponível */
+      padding: 8px;/* Adiciona espaçamento interno */
+      margin-top: 5px;/* Espaço abaixo de cada campo */
+      border: 1px solid #ccc;;/* Define a borda da página, com a cor branca*/
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 15px;/* Espaço abaixo de cada campo */
+      background-color: #007bff; /* Azul */
+      color: white;
+      border: none;
+      padding: 10px 15px;/* Adiciona espaçamento interno */
+      border-radius: 5px;
+      font-size: 16px;/* Tamanho da fonte dos inputs */
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    #curriculo {
+      background-color: white;
+      padding: 20px;/* Adiciona espaçamento interno */
+      margin-top: 30px;/* Espaço abaixo de cada campo */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra */
+      max-width: 700px;
+      margin: 30px auto;
+    }
+
+    .secao {
+      margin-bottom: 15px;/* Espaço abaixo de cada campo/botão */
+    }
+
+    .secao h2 {
+      color: #003366;
+      border-bottom: 1px solid #ccc; /* Linha abaixo do título */
+    }
+
+    #foto-preview {
+      width: 150px;
+      height: 150px;
+      object-fit: cover; /* Garante que a imagem preencha o espaço */
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+
+  <!-- Biblioteca jsPDF para gerar o PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+  <h1>Preencha seu Currículo</h1>
+
+  <!-- Formulário para preenchimento dos dados -->
+  <form id="formulario">
+    <!-- Campos de entrada -->
+    <label>Nome completo</label>
+    <input type="text" id="nome" required>
+
+    <label>E-mail</label>
+    <input type="email" id="email" required>
+
+    <label>Telefone</label>
+    <input type="tel" id="telefone" required>
+
+    <label>Cidade/Estado</label>
+    <input type="text" id="cidade" required>
+
+    <label>Objetivo profissional</label>
+    <textarea id="objetivo" required></textarea>
+
+    <label>Formação acadêmica</label>
+    <textarea id="formacao" required></textarea>
+
+    <label>Experiência profissional</label>
+    <textarea id="experiencia" required></textarea>
+
+    <label>Cursos complementares</label>
+    <textarea id="cursos" required></textarea>
+
+    <label>Idiomas</label>
+    <textarea id="idiomas" required></textarea>
+
+    <!-- Upload de imagem -->
+    <label>Foto (opcional)</label>
+    <input type="file" id="foto" accept="image/*">
+    <img id="foto-preview" alt="Pré-visualização da foto" />
+
+    <!-- Botões -->
+    <button type="button" onclick="gerarCurriculo()">Gerar Currículo</button>
+    <button type="button" onclick="novoCurriculo()">Novo Currículo</button>
+    <button type="button" onclick="gerarPDF()">Gerar PDF</button>
+  </form>
+
+  <!-- Área onde o currículo será exibido -->
+  <div id="curriculo"></div>
+
+  <script>
+    let fotoBase64 = ""; // Variável para armazenar a imagem em base64
+
+    // Evento que lê a imagem e mostra a prévia
+    document.getElementById("foto").addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          fotoBase64 = e.target.result; // Salva imagem convertida
+          document.getElementById("foto-preview").src = fotoBase64; // Exibe a imagem
+        };
+        reader.readAsDataURL(file); // Converte para base64
+      }
+    });
+
+    // Gera o currículo na tela
+    function gerarCurriculo() {
+      // Captura os valores dos campos
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const cidade = document.getElementById("cidade").value;
+      const objetivo = document.getElementById("objetivo").value;
+      const formacao = document.getElementById("formacao").value;
+      const experiencia = document.getElementById("experiencia").value;
+      const cursos = document.getElementById("cursos").value;
+      const idiomas = document.getElementById("idiomas").value;
+
+      // Monta a imagem se existir
+      let imagemHTML = fotoBase64 ? `<img src="${fotoBase64}" style="width:150px;height:150px;border-radius:10px;margin-bottom:15px;">` : "";
+
+      // Monta o HTML do currículo
+      const curriculo = `
+        <div class="secao">
+          ${imagemHTML}
+          <h2>${nome}</h2>
+          <p>${email} | ${telefone} | ${cidade}</p>
+        </div>
+        <div class="secao">
+          <h2>Objetivo</h2>
+          <p>${objetivo}</p>
+        </div>
+        <div class="secao">
+          <h2>Formação Acadêmica</h2>
+          <p>${formacao}</p>
+        </div>
+        <div class="secao">
+          <h2>Experiência Profissional</h2>
+          <p>${experiencia}</p>
+        </div>
+        <div class="secao">
+          <h2>Cursos Complementares</h2>
+          <p>${cursos}</p>
+        </div>
+        <div class="secao">
+          <h2>Idiomas</h2>
+          <p>${idiomas}</p>
+        </div>
+      `;
+
+      // Exibe no elemento da página
+      document.getElementById("curriculo").innerHTML = curriculo;
+    }
+
+    // Limpa o formulário e a visualização
+    function novoCurriculo() {
+      document.getElementById("formulario").reset();
+      document.getElementById("curriculo").innerHTML = "";
+      document.getElementById("foto-preview").src = "";
+      fotoBase64 = "";
+    }
+
+    // Gera um PDF com jsPDF
+    async function gerarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF(); // Cria novo PDF
+      let y = 20; // Posição vertical inicial
+
+      // Cabeçalho do currículo
+      doc.setFillColor(0, 76, 153);
+      doc.rect(10, 10, 190, 15, "F");
+      doc.setFontSize(16);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Currículo", 105, 20, { align: "center" });
+
+      // Adiciona imagem se houver
+      if (fotoBase64) {
+        doc.addImage(fotoBase64, "JPEG", 160, 25, 35, 35);
+      }
+
+      y = 40;
+
+      // Dados pessoais
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const cidade = document.getElementById("cidade").value;
+
+      doc.setFontSize(13);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "bold");
+      doc.text(nome, 15, y);
+
+      y += 8;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.text(`${email} | ${telefone} | ${cidade}`, 15, y);
+
+      y += 15;
+
+      // Função auxiliar para adicionar seções formatadas
+      function addSecao(titulo, texto) {
+        if (!texto.trim()) return; // Ignora se estiver vazio
+
+        if (y > 260) {
+          doc.addPage(); // Adiciona nova página se estiver no final
+          y = 20;
+        }
+
+        // Título da seção
+        doc.setFillColor(0, 123, 255);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.rect(10, y, 190, 8, "F");
+        doc.text(titulo, 15, y + 6);
+        y += 12;
+
+        // Texto da seção
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        const split = doc.splitTextToSize(texto, 180); // Quebra em linhas
+        doc.text(split, 15, y);
+        y += split.length * 6 + 5;
+      }
+
+      // Adiciona cada seção
+      addSecao("Objetivo", document.getElementById("objetivo").value);
+      addSecao("Formação Acadêmica", document.getElementById("formacao").value);
+      addSecao("Experiência Profissional", document.getElementById("experiencia").value);
+      addSecao("Cursos Complementares", document.getElementById("cursos").value);
+      addSecao("Idiomas", document.getElementById("idiomas").value);
+
+      // Salva o arquivo PDF
+      doc.save("curriculo.pdf");
+    }
+  </script>
+</body>
+</html>
+
